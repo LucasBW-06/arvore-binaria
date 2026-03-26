@@ -12,6 +12,12 @@ typedef struct
     No *raiz;
 } Avb;
 
+Avb* criar_arvore() {
+    Avb *arv = (Avb*) malloc(sizeof(Avb));
+    arv->raiz = NULL;
+    return arv;
+}
+
 void inserir_esquerda();
 
 void inserir_direita();
@@ -73,9 +79,18 @@ void inserir_direita(No *no, int valor) {
 void imprimir(No *raiz) {
     if(raiz != NULL) {
         imprimir(raiz->esquerda);
-        printf("%d",raiz->dado);
+        printf("%d\n",raiz->dado);
         imprimir(raiz->direita);
     }
+}
+
+No* apagar_arvore(No* raiz) {
+    if (raiz != NULL) {
+        raiz->direita = apagar_arvore(raiz->direita);
+        raiz->esquerda = apagar_arvore(raiz->esquerda);
+        free(raiz);
+    }
+    return NULL;
 }
 
 No* inserir(No *raiz, int valor) {
@@ -162,5 +177,48 @@ No* remover_elemento(No *raiz, int valor) {
 }
 
 int main() {
+    Avb *arv = criar_arvore(arv);
+    inserir_novo_no(arv, 5);
+    inserir_novo_no(arv, 2);
+    inserir_novo_no(arv, 3);
+    inserir_novo_no(arv, 4);
+    inserir_novo_no(arv, 1);
+    inserir_novo_no(arv, 6);
+    inserir_novo_no(arv, 7);
+    inserir_novo_no(arv, 8);
+    inserir_novo_no(arv, 10);
+    inserir_novo_no(arv, 9);
+
+    imprimir(arv->raiz);
+    printf("Tam:%d\n\n", tamanho(arv->raiz));
+
+    arv->raiz = apagar_arvore(arv->raiz);
+
+    imprimir(arv->raiz);
+    printf("Tam:%d\n\n", tamanho(arv->raiz));
+
+    arv->raiz = inserir(arv->raiz, 5);
+    arv->raiz = inserir(arv->raiz, 2);
+    arv->raiz = inserir(arv->raiz, 3);
+    arv->raiz = inserir(arv->raiz, 4);
+    arv->raiz = inserir(arv->raiz, 1);
+    arv->raiz = inserir(arv->raiz, 6);
+    arv->raiz = inserir(arv->raiz, 7);
+    arv->raiz = inserir(arv->raiz, 8);
+    arv->raiz = inserir(arv->raiz, 10);
+    arv->raiz = inserir(arv->raiz, 9);
+
+    imprimir(arv->raiz);
+    printf("Tam:%d\n", tamanho(arv->raiz));
+
+    printf("%d\n\n", buscar(arv->raiz, 8)->dado);
+    
+    arv->raiz = remover_elemento(arv->raiz, 3);
+    arv->raiz = remover_elemento(arv->raiz, 6);
+    arv->raiz = remover_elemento(arv->raiz, 5);
+
+    imprimir(arv->raiz);
+    printf("Tam:%d", tamanho(arv->raiz));
+
     return 0;
 }
